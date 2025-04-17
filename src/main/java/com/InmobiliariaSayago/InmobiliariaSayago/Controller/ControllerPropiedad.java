@@ -77,6 +77,7 @@ public class ControllerPropiedad {
     public List<Propiedades> getPropiedades()
     {
         return propiedadService.getPropiedades();
+
     }
 
 
