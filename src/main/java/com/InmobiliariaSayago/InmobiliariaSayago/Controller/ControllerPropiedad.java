@@ -10,12 +10,11 @@ import jakarta.persistence.OneToMany;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -45,6 +44,7 @@ public class ControllerPropiedad {
                                                          @RequestParam("ambientes") int ambientes,
                                                          @RequestParam("banos") int banos,
                                                          @RequestParam("precio") Long precio,
+
                                                          @RequestParam("archivos") List<MultipartFile> archivos) {
         // Crear una nueva instancia de Proyecto con los datos recibidos
         Propiedades proyecto = new Propiedades();
@@ -56,6 +56,7 @@ public class ControllerPropiedad {
         proyecto.setAmbientes(ambientes);
         proyecto.setBanos(banos);
         proyecto.setPrecio(precio);
+        proyecto.setFechaPublicacion(new Date());
         proyecto.setDisponible(true);
 
 
@@ -72,5 +73,11 @@ public class ControllerPropiedad {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("Error: " + e.getMessage(), false));  // Error en el proceso
         }
     }
+    @GetMapping("/traer")
+    public List<Propiedades> getPropiedades()
+    {
+        return propiedadService.getPropiedades();
+    }
+
 
 }
