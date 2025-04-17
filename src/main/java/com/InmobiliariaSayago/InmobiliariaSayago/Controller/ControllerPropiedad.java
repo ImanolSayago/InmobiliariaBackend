@@ -80,4 +80,10 @@ public class ControllerPropiedad {
     }
 
 
+    @GetMapping("/traer/{id}")
+    public Propiedades getPropiedadID(@PathVariable Long id){
+        return propiedadService.getPropiedadByID(id);
+    }
+
+
 }
