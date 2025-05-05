@@ -23,7 +23,10 @@ public class Propiedades {
     private int banos;
     private Long precio;
     private boolean disponible;
+    private int cocheras;
+    private int tipo;
     private Date fechaPublicacion;
+
     private String imagenPrincipal;
 
     @OneToMany(mappedBy = "propiedad", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -32,7 +35,7 @@ public class Propiedades {
     public Propiedades() {
     }
 
-    public Propiedades(Long id, String titulo, String descripcion, String direccion, String ciudad, String provincia, int ambientes, int banos, Long precio, boolean disponible, Date fechaPublicacion, String imagenPrincipal, List<ImagenPropiedad> listaImg) {
+    public Propiedades(Long id, String titulo, String descripcion, String direccion, String ciudad, int cocheras, String provincia, int ambientes, int banos, Long precio, boolean disponible, Date fechaPublicacion,int tipo, String imagenPrincipal, List<ImagenPropiedad> listaImg) {
         this.id = id;
         this.titulo = titulo;
         this.descripcion = descripcion;
@@ -43,9 +46,27 @@ public class Propiedades {
         this.banos = banos;
         this.precio = precio;
         this.disponible = disponible;
+        this.tipo = tipo;
+        this.cocheras=cocheras;
         this.fechaPublicacion = fechaPublicacion;
         this.imagenPrincipal = imagenPrincipal;
         this.listaImg = listaImg;
+    }
+
+    public int getCocheras() {
+        return cocheras;
+    }
+
+    public void setCocheras(int cocheras) {
+        this.cocheras = cocheras;
+    }
+
+    public int getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
     }
 
     public Date getFechaPublicacion() {

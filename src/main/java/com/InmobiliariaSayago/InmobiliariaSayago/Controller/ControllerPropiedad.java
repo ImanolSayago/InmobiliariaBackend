@@ -33,7 +33,7 @@ public class ControllerPropiedad {
     private List<ImagenPropiedad> listaImg;
 
     @Autowired
-    ServicePropiedad propiedadService;
+    ServicePropiedad propiedadService ;
 
     @PostMapping("/crear")
     public ResponseEntity<ResponseMessage> crearProyecto(@RequestParam("titulo") String titulo,
@@ -44,7 +44,8 @@ public class ControllerPropiedad {
                                                          @RequestParam("ambientes") int ambientes,
                                                          @RequestParam("banos") int banos,
                                                          @RequestParam("precio") Long precio,
-
+                                                         @RequestParam("tipo") int tipo  ,
+                                                         @RequestParam("cocheras") int cocheras,
                                                          @RequestParam("archivos") List<MultipartFile> archivos) {
         // Crear una nueva instancia de Proyecto con los datos recibidos
         Propiedades proyecto = new Propiedades();
@@ -56,6 +57,8 @@ public class ControllerPropiedad {
         proyecto.setAmbientes(ambientes);
         proyecto.setBanos(banos);
         proyecto.setPrecio(precio);
+        proyecto.setTipo(tipo);
+        proyecto.setCocheras(cocheras);
         proyecto.setFechaPublicacion(new Date());
         proyecto.setDisponible(true);
 
