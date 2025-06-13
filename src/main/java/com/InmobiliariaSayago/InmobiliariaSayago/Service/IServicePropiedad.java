@@ -15,4 +15,8 @@ public interface IServicePropiedad {
     public List<Propiedades>getPropiedades();
 
     public Propiedades getPropiedadByID(Long id);
+
+    public boolean darDeBaja(Long id);
+
+    public boolean editarPropiedad(Propiedades prop);
 }

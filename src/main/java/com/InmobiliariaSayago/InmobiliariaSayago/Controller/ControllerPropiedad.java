@@ -13,21 +13,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/propiedad")
 public class ControllerPropiedad {
-
-    private String ciudad;
-    private String provincia;
-    private int ambientes;
-    private int banos;
-    private Long precio;
-    private boolean disponible;
-    private String imagenPrincipal;
 
     @OneToMany(mappedBy = "propiedad", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ImagenPropiedad> listaImg;
@@ -36,18 +28,19 @@ public class ControllerPropiedad {
     ServicePropiedad propiedadService ;
 
     @PostMapping("/crear")
-    public ResponseEntity<ResponseMessage> crearProyecto(@RequestParam("titulo") String titulo,
-                                                         @RequestParam("descripcion") String descripcion,
-                                                         @RequestParam("direccion") String direccion,
-                                                         @RequestParam("ciudad") String ciudad,
-                                                         @RequestParam("provincia") String provincia,
-                                                         @RequestParam("ambientes") int ambientes,
-                                                         @RequestParam("banos") int banos,
-                                                         @RequestParam("precio") Long precio,
-                                                         @RequestParam("tipo") int tipo  ,
-                                                         @RequestParam("cocheras") int cocheras,
-                                                         @RequestParam("archivos") List<MultipartFile> archivos) {
-        // Crear una nueva instancia de Proyecto con los datos recibidos
+    public ResponseEntity<ResponseMessage> crearProyecto(
+            @RequestParam("titulo") String titulo,
+            @RequestParam("descripcion") String descripcion,
+            @RequestParam("direccion") String direccion,
+            @RequestParam("ciudad") String ciudad,
+            @RequestParam("provincia") String provincia,
+            @RequestParam("ambientes") int ambientes,
+            @RequestParam("banos") int banos,
+            @RequestParam("precio") Long precio,
+            @RequestParam("tipo") int tipo,
+            @RequestParam("cocheras") int cocheras,
+            @RequestParam("archivos") List<MultipartFile> archivos) { // Recibe una lista de archivos
+
         Propiedades proyecto = new Propiedades();
         proyecto.setTitulo(titulo);
         proyecto.setDescripcion(descripcion);
@@ -62,18 +55,16 @@ public class ControllerPropiedad {
         proyecto.setFechaPublicacion(new Date());
         proyecto.setDisponible(true);
 
-
-        // Llamar al servicio para crear el proyecto y subir las imágenes
         try {
-            ResponseMessage response = propiedadService.crearProyecto(proyecto, archivos);
+            ResponseMessage response = propiedadService.crearProyecto(proyecto, archivos); // Llama al servicio
 
             if (response.isSuccess()) {
-                return ResponseEntity.ok(response);  // Si el proyecto se creó con éxito, devolvemos la respuesta
+                return ResponseEntity.ok(response);
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);  // Error en la creación del proyecto
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
             }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("Error: " + e.getMessage(), false));  // Error en el proceso
+        } catch (Exception e) { // Captura otras excepciones
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("Error: " + e.getMessage(), false));
         }
     }
     @GetMapping("/traer")
@@ -89,5 +80,27 @@ public class ControllerPropiedad {
         return propiedadService.getPropiedadByID(id);
     }
 
+    @PutMapping("/baja/{id}")
+    public ResponseEntity<Void> darDeBaja(@PathVariable Long id) {
+        boolean bajaExitosa = propiedadService.darDeBaja(id);
+        if (bajaExitosa) {
+            return ResponseEntity.noContent().build(); // 204 OK sin cuerpo
+        } else {
+            return ResponseEntity.notFound().build(); // 404 si no existía
+        }
+    }
+
+    @PutMapping("/editPropiedad")
+    public ResponseEntity<Void> editarProp(@RequestBody Propiedades prop)
+    {
+      boolean editado = propiedadService.editarPropiedad(prop);
+      if(editado)
+      {
+          return ResponseEntity.noContent().build();
+      }
+      else {
+          return ResponseEntity.notFound().build();
+      }
+    }
 
 }

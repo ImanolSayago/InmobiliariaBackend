@@ -94,5 +94,54 @@ public class ServicePropiedad implements IServicePropiedad{
         return repoPropiedad.findById(id).orElse(null);
     }
 
+    @Override
+    public boolean darDeBaja(Long id) {
+        boolean editado = false;
+        Propiedades prop = repoPropiedad.findById(id).orElse(null);
+        if(prop!=null)
+        {
+            if(prop.isDisponible()){
+                prop.setDisponible(false);
+                repoPropiedad.save(prop);
+                editado = true;
+            }
+            else
+            {
+                prop.setDisponible(true);
+                repoPropiedad.save(prop);
+                editado = true;
+            }
+
+        }
+        return editado;
+    }
+
+    @Override
+    public boolean editarPropiedad(Propiedades prop) {
+       Propiedades propeditada = repoPropiedad.findById(prop.getId()).orElse(null);
+       boolean editado = false;
+       if(propeditada!=null)
+       {
+
+           propeditada.setPrecio(prop.getPrecio());
+           propeditada.setBanos(prop.getBanos());
+           propeditada.setAmbientes(prop.getAmbientes());
+           propeditada.setProvincia(prop.getProvincia());
+           propeditada.setCiudad(prop.getCiudad());
+           propeditada.setDireccion(prop.getDireccion());
+           propeditada.setDescripcion(prop.getDescripcion());
+           propeditada.setTitulo(prop.getTitulo());
+           propeditada.setCocheras(prop.getCocheras());
+
+           repoPropiedad.save(propeditada);
+           editado= true;
+       }
+       else
+       {
+           System.out.println("La propiedad no contiene datos");
+       }
+        return editado;
+    }
+
 
 }
